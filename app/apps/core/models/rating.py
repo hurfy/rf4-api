@@ -2,36 +2,36 @@ from django.db import models
 
 
 class Rating(models.Model):
-    fish     = models.CharField(max_length=255)
-    weight   = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    location = models.CharField(max_length=255, null=True, blank=True)
-    lure     = models.CharField(max_length=255, null=True, blank=True)
-    player   = models.CharField(max_length=255, null=True, blank=True)
-    date     = models.DateField(null=True, blank=True)
+    position = models.PositiveIntegerField(verbose_name="Rating position")
+    player   = models.CharField(verbose_name="Username", max_length=256)
+    level    = models.PositiveIntegerField(verbose_name="Player level")
+    ingame   = models.PositiveIntegerField(verbose_name="In-game days")
+    region   = models.CharField(verbose_name="Rating region", max_length=4)
 
     class Meta:
-        abstract     = True
         verbose_name = "Rating"
+        db_table     = "core_rating"
         ordering     = ["id"]
 
     def __str__(self) -> str:
         return (
-            f"Fish    : {self.fish}\n"
-            f"Weight  : {self.weight}\n"
-            f"Location: {self.location}\n"
-            f"Lure    : {self.lure}\n"
+            f"Position: {self.position}\n"
             f"Player  : {self.player}\n"
-            f"Date    : {self.date}"
+            f"Level   : {self.level}\n"
+            f"InGame  : {self.ingame}\n"
+            f"Region  : {self.region}"
         )
 
     @property
     def as_dict(self) -> dict:
         return {
-            "fish"    : self.fish,
-            "weight"  : self.weight,
-            "location": self.location,
-            "lure"    : self.lure,
+            "position": self.position,
             "player"  : self.player,
-            "date"    : self.date
+            "level"   : self.level,
+            "ingame"  : self.ingame,
+            "region"  : self.region
         }
 
+    @property
+    def ingame_in_hours(self) -> float:
+        return round(self.ingame / 24, 2)
