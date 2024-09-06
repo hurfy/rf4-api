@@ -1,5 +1,5 @@
-from selenium                          import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium                          import webdriver
 
 
 def create_driver() -> webdriver.Chrome:

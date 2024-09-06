@@ -8,16 +8,16 @@ class WebParser:
     def __init__(self, driver: webdriver) -> None:
         self.__driver = driver
 
-    def __fetch_table(self, url: str, class_name: str) -> str:
+    def __fetch_table(self, url, class_name: str) -> str:
         """
         Fetches the records table from the given URL and returns it as HTML
         """
         self.__driver.get(url)
-        self.__driver.implicitly_wait(1)  # 1 second
+        self.__driver.implicitly_wait(3)  # 3 seconds
 
         return self.__driver.find_element(By.CLASS_NAME, class_name).get_attribute("outerHTML")
 
-    def parse_records_table(self, url: str) -> dict:
+    def parse_records_table(self, url, rg, r_type: str) -> dict:
         """
         This function parses the records table from a given URL and returns a dictionary of records
         """
@@ -36,23 +36,29 @@ class WebParser:
                         "weight":
                             self.__convert_to_kilograms(
                                 self.__replace_html_chars(row.find("div", class_="weight").text)
-                            ),
+                            ) or 0,
                         "location":
-                            self.__replace_html_chars(row.find("div", class_="location").text),
+                            self.__replace_html_chars(row.find("div", class_="location").text) or "",
                         "bait":
-                            self.__replace_html_chars(row.find("div", class_="bait_icon").get('title')),
+                            self.__replace_html_chars(row.find("div", class_="bait_icon").get('title')) or "",
                         "username":
-                            self.__replace_html_chars(row.find("div", class_="gamername").text.strip()),
+                            self.__replace_html_chars(row.find("div", class_="gamername").text.strip()) or "",
                         "date":
-                            self.__replace_html_chars(row.find("div", class_="data").text)
+                            self.__convert_to_db_date(
+                                self.__replace_html_chars(row.find("div", class_="data").text)
+                            ) or "",
+                        "region":
+                            rg.lower(),
+                        "type":
+                            r_type,
                     }
                 )
 
-            records[fish_name] = _records
+            records[fish_name.strip()] = _records
 
         return records
 
-    def parse_ratings_table(self, url: str) -> list[dict]:
+    def parse_ratings_table(self, url, rg: str) -> list[dict]:
         """
         This function parses the ratings table from a given URL using BeautifulSoup.
         It takes a URL as input, fetches the ratings table, and returns a list of dictionaries
@@ -65,8 +71,9 @@ class WebParser:
                 {
                     "position": int(row.find("td", class_="position").text),
                     "username": row.find("div", class_="avatar_text").text,
-                    "level"   : row.find("td", class_="level").text,
-                    "gametime": row.find("td", class_="gametime").text
+                    "level"   : int(row.find("td", class_="level").text),
+                    "gametime": int(row.find("td", class_="gametime").text),
+                    "region"  : rg,
                 }
             )
 
@@ -77,7 +84,13 @@ class WebParser:
         return text.replace("\xa0", "")
 
     @staticmethod
-    def __convert_to_kilograms(text: str) -> int:
-        return int(
+    def __convert_to_kilograms(text: str) -> float:
+        return float(
             int("".join([i for i in findall(r"\d+", text)])) / 1000
         )
+
+    @staticmethod
+    def __convert_to_db_date(text: str) -> str:
+        _list = text.split(".")
+
+        return f"20{_list[2]}-{_list[1]}-{_list[0]}"
