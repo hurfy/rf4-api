@@ -9,23 +9,24 @@ class RecordModelTestCase(TestCase):
             fish     = "Nelma",
             weight   = 23.653,
             location = "Lower Tunguska River",
-            lure     = "Soturi 22g-009",
+            bait     = "Soturi 22g-009",
             player   = "hurfy",
             date     = "2024-02-18",
-            region   = "CIS"
+            region   = "cis",
+            rec_type = "records"
         )
 
-    def test_create_record(self) -> None:
-        # Valid data
+    def test_create_valid_data(self) -> None:
         self.assertEqual(self.record.fish, 'Nelma')
         self.assertEqual(self.record.weight, 23.653)
         self.assertEqual(self.record.location, 'Lower Tunguska River')
-        self.assertEqual(self.record.lure, 'Soturi 22g-009')
+        self.assertEqual(self.record.bait, 'Soturi 22g-009')
         self.assertEqual(self.record.player, 'hurfy')
         self.assertEqual(self.record.date, '2024-02-18')
-        self.assertEqual(self.record.region, 'CIS')
+        self.assertEqual(self.record.region, 'cis')
+        self.assertEqual(self.record.rec_type, 'records')
 
-        # Invalid data (TypeError)
+    def test_create_invalid_data(self) -> None:
         with self.assertRaises(Exception):
             Record.objects.create(
                 fish     = True,
@@ -42,10 +43,11 @@ class RecordModelTestCase(TestCase):
             f"Fish    : {self.record.fish}\n"
             f"Weight  : {self.record.weight}\n"
             f"Location: {self.record.location}\n"
-            f"Lure    : {self.record.lure}\n"
+            f"Bait    : {self.record.bait}\n"
             f"Player  : {self.record.player}\n"
             f"Date    : {self.record.date}\n"
-            f"Region  : {self.record.region}"
+            f"Region  : {self.record.region}\n"
+            f"Type    : {self.record.rec_type}"
         )
         self.assertEqual(str(self.record), expected_str)
 
@@ -54,10 +56,11 @@ class RecordModelTestCase(TestCase):
             "fish"    : self.record.fish,
             "weight"  : self.record.weight,
             "location": self.record.location,
-            "lure"    : self.record.lure,
+            "bait"    : self.record.bait,
             "player"  : self.record.player,
             "date"    : self.record.date,
-            "region"  : self.record.region
+            "region"  : self.record.region,
+            "type"    : self.record.rec_type
         }
         self.assertEqual(self.record.as_dict, expected_dict)
 

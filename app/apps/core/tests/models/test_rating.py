@@ -13,15 +13,14 @@ class RatingModelTestCase(TestCase):
             region   = "CIS"
         )
 
-    def test_create_rating(self) -> None:
-        # Valid data
+    def test_create_valid_data(self) -> None:
         self.assertEquals(self.rating.position, 12)
         self.assertEquals(self.rating.player, "hurfy")
         self.assertEquals(self.rating.level, 34)
         self.assertEquals(self.rating.ingame, 1024)
         self.assertEquals(self.rating.region, "CIS")
 
-        # Invalid data (ValueError)
+    def test_create_invalid_data(self) -> None:
         with self.assertRaises(Exception):
             Rating.objects.create(
                 position = -1,

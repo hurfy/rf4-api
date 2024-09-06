@@ -29,7 +29,7 @@ class Rating(models.Model):
             "player"  : self.player,
             "level"   : self.level,
             "ingame"  : self.ingame,
-            "region"  : self.region
+            "region"  : self.region,
         }
 
     @property
