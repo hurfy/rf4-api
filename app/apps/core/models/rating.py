@@ -33,5 +33,5 @@ class Rating(models.Model):
         }
 
     @property
-    def ingame_in_hours(self) -> float:
+    def ingame_in_days(self) -> float:
         return round(self.ingame / 24, 2)
