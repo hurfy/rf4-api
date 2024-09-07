@@ -1,0 +1,2 @@
+from apps.api.serializers.serializer_record import RecordSerializer
+from apps.api.serializers.serializer_rating import RatingSerializer
