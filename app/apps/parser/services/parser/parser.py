@@ -17,6 +17,7 @@ class WebParser:
 
         return self.__driver.find_element(By.CLASS_NAME, class_name).get_attribute("outerHTML")
 
+    # TODO: refactor this pls...
     def parse_records_table(self, url, rg, r_type: str) -> dict:
         """
         This function parses the records table from a given URL and returns a dictionary of records
@@ -30,29 +31,36 @@ class WebParser:
             fish_name = fish.find("div", class_="text").text
 
             # Each record can have up to 5 records, look for them
-            for row in fish.find_all(attrs={"class": "row"}):
-                _records.append(
-                    {
-                        "weight":
-                            self.__convert_to_kilograms(
-                                self.__replace_html_chars(row.find("div", class_="weight").text)
-                            ) or 0,
-                        "location":
-                            self.__replace_html_chars(row.find("div", class_="location").text) or "",
-                        "bait":
-                            self.__replace_html_chars(row.find("div", class_="bait_icon").get('title')) or "",
-                        "username":
-                            self.__replace_html_chars(row.find("div", class_="gamername").text.strip()) or "",
-                        "date":
-                            self.__convert_to_db_date(
-                                self.__replace_html_chars(row.find("div", class_="data").text)
-                            ) or "",
-                        "region":
-                            rg.lower(),
-                        "type":
-                            r_type,
-                    }
-                )
+            rows = fish.find_all(attrs={"class": "row"})
+
+            # No records found
+            if len(rows) <= 1:
+                continue
+
+            else:
+                for row in rows:
+                    _records.append(
+                        {
+                            "weight":
+                                self.__convert_to_kilograms(
+                                    self.__replace_html_chars(row.find("div", class_="weight").text)
+                                ),
+                            "location":
+                                self.__replace_html_chars(row.find("div", class_="location").text),
+                            "bait":
+                                self.__replace_html_chars(row.find("div", class_="bait_icon").get('title')),
+                            "username":
+                                self.__replace_html_chars(row.find("div", class_="gamername").text.strip()),
+                            "date":
+                                self.__convert_to_db_date(
+                                    self.__replace_html_chars(row.find("div", class_="data").text)
+                                ),
+                            "region":
+                                rg.lower(),
+                            "type":
+                                r_type,
+                        }
+                    )
 
             records[fish_name.strip()] = _records
 
@@ -73,7 +81,7 @@ class WebParser:
                     "username": row.find("div", class_="avatar_text").text,
                     "level"   : int(row.find("td", class_="level").text),
                     "gametime": int(row.find("td", class_="gametime").text),
-                    "region"  : rg,
+                    "region"  : rg.lower(),
                 }
             )
 
