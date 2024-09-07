@@ -50,13 +50,13 @@ def fetch_ratings() -> None:
 
 
 @app.task(bind=True, ignore_result=True)
-def fetch_ratings_at_worker_ready(self) -> None:
-    fetch_ratings()
-
-
-@app.task
 def fetch_records_at_worker_ready(self) -> None:
     fetch_records()
+
+
+@app.task(bind=True, ignore_result=True)
+def fetch_ratings_at_worker_ready(self) -> None:
+    fetch_ratings()
 
 
 # TODO: Add daily tasks
