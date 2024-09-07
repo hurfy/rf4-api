@@ -1,7 +1,5 @@
-# International, Russia&CIS, Germany, USA, France, China, Poland, Korea, Japan, Other
-REGIONS = ["GL", "RU", "DE", "US", "FR", "CN", "PL", "KR", "JP", "EN"]
-# Records, Ultralight, Telestick
-CATEGORY_URL = ["records", "ultralight", "telestick"]
+REGIONS    = ["GL", "RU", "DE", "US", "FR", "CN", "PL", "KR", "JP", "EN"]
+CATEGORIES = ["records", "ultralight", "telestick"]
 
 
 def records_urls() -> dict:
@@ -12,7 +10,7 @@ def records_urls() -> dict:
     return {
         rg: {
             ct: f"https://rf4game.ru/{ct}/region/{rg}/"
-            for ct in CATEGORY_URL
+            for ct in CATEGORIES
         }
         for rg in REGIONS
     }
