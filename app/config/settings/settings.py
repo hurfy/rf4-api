@@ -104,6 +104,12 @@ STATIC_URL = "static/"
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# REST Framework
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 30
+}
+
 # Celery
 CELERY_BROKER_URL = f"redis://127.0.0.1:6379/0"
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
