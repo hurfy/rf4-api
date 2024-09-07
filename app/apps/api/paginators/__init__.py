@@ -1,0 +1,1 @@
+from apps.api.paginators.paginator_default import DefaultAPIPaginator
