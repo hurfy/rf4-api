@@ -1,2 +1,3 @@
-from apps.parser.tests.services.test_driver import SeleniumWebDriverTestCase
-from apps.parser.tests.services.test_parser import WebParserTestCase
+from apps.parser.tests.services.utils import *
+from apps.parser.tests.services.data  import *
+from apps.parser.tests.services.db    import *
