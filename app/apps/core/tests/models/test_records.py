@@ -1,11 +1,13 @@
 from django.test      import TestCase
 
-from apps.core.models import Record
+from apps.core.models import Record, AbsoluteRecord, WeeklyRecord
 
 
-class RecordModelTestCase(TestCase):
-    def setUp(self) -> None:
-        self.record = Record.objects.create(
+class BaseRecordModelTestCase(TestCase):
+    model = Record
+
+    def create_valid_data(self) -> Record:
+        return self.model.objects.create(
             fish     = "Nelma",
             weight   = 23.653,
             location = "Lower Tunguska River",
@@ -16,19 +18,8 @@ class RecordModelTestCase(TestCase):
             rec_type = "records"
         )
 
-    def test_create_valid_data(self) -> None:
-        self.assertEqual(self.record.fish, 'Nelma')
-        self.assertEqual(self.record.weight, 23.653)
-        self.assertEqual(self.record.location, 'Lower Tunguska River')
-        self.assertEqual(self.record.bait, 'Soturi 22g-009')
-        self.assertEqual(self.record.player, 'hurfy')
-        self.assertEqual(self.record.date, '2024-02-18')
-        self.assertEqual(self.record.region, 'cis')
-        self.assertEqual(self.record.rec_type, 'records')
-
-    def test_create_invalid_data(self) -> None:
-        with self.assertRaises(Exception):
-            Record.objects.create(
+    def create_invalid_data(self) -> Record:
+        return self.model.objects.create(
                 fish     = True,
                 weight   = "12.12",
                 location = None,
@@ -38,32 +29,59 @@ class RecordModelTestCase(TestCase):
                 region   = lambda x: int(x)
             )
 
-    def test_record_str_representation(self) -> None:
-        expected_str = (
-            f"Fish    : {self.record.fish}\n"
-            f"Weight  : {self.record.weight}\n"
-            f"Location: {self.record.location}\n"
-            f"Bait    : {self.record.bait}\n"
-            f"Player  : {self.record.player}\n"
-            f"Date    : {self.record.date}\n"
-            f"Region  : {self.record.region}\n"
-            f"Type    : {self.record.rec_type}"
+    def setUp(self) -> None:
+        self.data = self.create_valid_data()
+
+    def test_create_valid(self) -> None:
+        self.assertIsInstance(self.data, Record), self.assertTrue(self.data), self.assertIsNotNone(self.data)
+
+        self.assertEqual(self.data.fish, 'Nelma')
+        self.assertEqual(self.data.weight, 23.653)
+        self.assertEqual(self.data.location, 'Lower Tunguska River')
+        self.assertEqual(self.data.bait, 'Soturi 22g-009')
+        self.assertEqual(self.data.player, 'hurfy')
+        self.assertEqual(self.data.date, '2024-02-18')
+        self.assertEqual(self.data.region, 'cis')
+        self.assertEqual(self.data.rec_type, 'records')
+
+    def test_create_invalid(self) -> None:
+        with self.assertRaises(Exception):
+            self.create_invalid_data()
+
+    def test_as_str(self) -> None:
+        expected_data = (
+            f"Fish    : Nelma\n"
+            f"Weight  : 23.653\n"
+            f"Location: Lower Tunguska River\n"
+            f"Bait    : Soturi 22g-009\n"
+            f"Player  : hurfy\n"
+            f"Date    : 2024-02-18\n"
+            f"Region  : cis\n"
+            f"Type    : records"
         )
-        self.assertEqual(str(self.record), expected_str)
 
-    def test_record_as_dict(self) -> None:
-        expected_dict = {
-            "fish"    : self.record.fish,
-            "weight"  : self.record.weight,
-            "location": self.record.location,
-            "bait"    : self.record.bait,
-            "player"  : self.record.player,
-            "date"    : self.record.date,
-            "region"  : self.record.region,
-            "type"    : self.record.rec_type
+        self.assertEqual(str(self.data), expected_data)
+
+    def test_as_dict(self) -> None:
+        expected_data = {
+            "fish"    : "Nelma",
+            "weight"  : 23.653,
+            "location": "Lower Tunguska River",
+            "bait"    : "Soturi 22g-009",
+            "player"  : "hurfy",
+            "date"    : "2024-02-18",
+            "region"  : "cis",
+            "type"    : "records"
         }
-        self.assertEqual(self.record.as_dict, expected_dict)
+        self.assertEqual(self.data.as_dict, expected_data)
 
-    def test_record_weight_in_gram(self) -> None:
-        # 23653g
-        self.assertEqual(self.record.weight_in_gram, self.record.weight * 1000)
+    def test_weight_in_gram(self) -> None:
+        self.assertEqual(self.data.weight_in_gram, self.data.weight * 1000)  # 23653g
+
+
+class AbsoluteRecordTestCase(BaseRecordModelTestCase):
+    model = AbsoluteRecord
+
+
+class WeeklyRecordTestCase(BaseRecordModelTestCase):
+    model = WeeklyRecord
