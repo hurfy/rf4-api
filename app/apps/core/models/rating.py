@@ -3,10 +3,10 @@ from django.db import models
 
 class Rating(models.Model):
     position = models.PositiveIntegerField(verbose_name="Rating position")
-    player   = models.CharField(verbose_name="Username", max_length=256)
     level    = models.PositiveIntegerField(verbose_name="Player level")
     ingame   = models.PositiveIntegerField(verbose_name="In-game days")
     region   = models.CharField(verbose_name="Rating region", max_length=4)
+    player   = models.CharField(verbose_name="Username", max_length=256)
 
     class Meta:
         verbose_name = "Rating"

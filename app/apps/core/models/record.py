@@ -2,8 +2,8 @@ from django.db import models
 
 
 class Record(models.Model):
-    fish     = models.CharField(verbose_name="Fish name", max_length=64)
     weight   = models.DecimalField(verbose_name="Fish weight", max_digits=16, decimal_places=3)
+    fish     = models.CharField(verbose_name="Fish name", max_length=64)
     location = models.CharField(verbose_name="Location", max_length=64)
     bait     = models.CharField(verbose_name="Bait name", max_length=128)
     player   = models.CharField(verbose_name="Username", max_length=256)
@@ -12,9 +12,8 @@ class Record(models.Model):
     rec_type = models.CharField(verbose_name="Record type", max_length=16)
 
     class Meta:
-        verbose_name = "Record"
-        db_table     = "core_records"
-        ordering     = ["id"]
+        abstract = True
+        ordering = ["id"]
 
     def __str__(self) -> str:
         return (
@@ -44,3 +43,15 @@ class Record(models.Model):
     @property
     def weight_in_gram(self) -> int:
         return int(self.weight * 1000)
+
+
+class AbsoluteRecord(Record):
+    class Meta:
+        verbose_name = "Absolute Record"
+        db_table     = "core_absolute_records"
+
+
+class WeeklyRecord(Record):
+    class Meta:
+        verbose_name = "Weekly Record"
+        db_table     = "core_weekly_records"
