@@ -31,14 +31,14 @@ class RecordsParser(AbstractParser):
         dp = DataProcessor()
 
         return {
-            "fish"    : dp.rm_html_chars(kwargs.get("fish", "").strip()),
+            "fish"    : dp.clean(kwargs.get("fish", "").strip()),
             "region"  : region.lower(),
             "type"    : kwargs.get("category", "records"),
-            "weight"  : dp.convert_to_kg(data.find("div", class_="weight").text),
-            "location": dp.rm_html_chars(data.find("div", class_="location").text),
-            "bait"    : dp.rm_html_chars(data.find("div", class_="bait_icon").get('title')),
-            "username": dp.rm_html_chars(data.find("div", class_="gamername").text.strip()),
-            "date"    : dp.serialize_date(data.find("div", class_="data").text),
+            "weight"  : dp.to_kg(data.find("div", class_="weight").text),
+            "location": dp.clean(data.find("div", class_="location").text),
+            "bait"    : dp.clean(data.find("div", class_="bait_icon").get('title')),
+            "username": dp.clean(data.find("div", class_="gamername").text.strip()),
+            "date"    : dp.serialize(data.find("div", class_="data").text),
         }
 
     def _parse_data(self, data, region: str, *args, **kwargs) -> list[dict]:
@@ -95,7 +95,9 @@ class RatingsParser(AbstractParser):
 # WIP
 class WinnersParser(AbstractParser):
     def _serialize_data(self, data, region: str, *args, **kwargs) -> dict:
-        pass
+        return {
+
+        }
 
     def _parse_data(self, data, region: str, *args, **kwargs) -> list[dict]:
         pass

@@ -2,8 +2,8 @@ from re import findall
 
 
 class DataProcessor:
-    def convert_to_kg(self, text: str) -> float:
-        text = self.rm_html_chars(text)
+    def to_kg(self, text: str) -> float:
+        text = self.clean(text)
 
         if "кг" in text and "." not in text:
             return float(findall(r"\d+", text)[0])
@@ -12,12 +12,12 @@ class DataProcessor:
             int("".join([i for i in findall(r"\d+", text)])) / 1000
         )
 
-    def serialize_date(self, text: str) -> str:
-        text    = self.rm_html_chars(text)
+    def serialize(self, text: str) -> str:
+        text    = self.clean(text)
         d, m, y = text.split(".")
 
         return f"20{y}-{m}-{d}"
 
     @staticmethod
-    def rm_html_chars(text: str) -> str:
+    def clean(text: str) -> str:
         return text.replace("\xa0", "")
