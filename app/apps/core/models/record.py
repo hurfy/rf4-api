@@ -9,7 +9,7 @@ class Record(models.Model):
     player   = models.CharField(verbose_name="Username", max_length=256)
     date     = models.DateField(verbose_name="Date of catch")
     region   = models.CharField(verbose_name="Record region", max_length=4)
-    rec_type = models.CharField(verbose_name="Record type", max_length=16)
+    category = models.CharField(verbose_name="Record type", max_length=16)
 
     class Meta:
         abstract = True
@@ -24,7 +24,7 @@ class Record(models.Model):
             f"Player  : {self.player}\n"
             f"Date    : {self.date}\n"
             f"Region  : {self.region}\n"
-            f"Type    : {self.rec_type}"
+            f"Category: {self.category}"
         )
 
     @property
@@ -37,7 +37,7 @@ class Record(models.Model):
             "player"  : self.player,
             "date"    : self.date,
             "region"  : self.region,
-            "type"    : self.rec_type,
+            "category": self.category,
         }
 
     @property

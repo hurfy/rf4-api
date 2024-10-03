@@ -1,8 +1,8 @@
 from abc                       import ABC, abstractmethod
 from bs4                       import BeautifulSoup
 
-from apps.parser.services.data import AbstractFetcher
-from apps.parser.services      import DataProcessor
+from apps.parser.services.data import AbstractFetcher, RecordsFetcher, RatingsFetcher, WinnersFetcher
+from apps.parser.services      import DataProcessor, WebDriver, URLsManager
 
 
 class AbstractParser(ABC):
@@ -31,13 +31,13 @@ class RecordsParser(AbstractParser):
         dp = DataProcessor()
 
         return {
-            "fish"    : dp.clean(kwargs.get("fish", "").strip()),
+            "category": kwargs.get("category", "records"),
             "region"  : region.lower(),
-            "type"    : kwargs.get("category", "records"),
+            "player"  : dp.clean(data.find("div", class_="gamername").text.strip()),
+            "fish"    : dp.clean(kwargs.get("fish", "").strip()),
             "weight"  : dp.to_kg(data.find("div", class_="weight").text),
             "location": dp.clean(data.find("div", class_="location").text),
             "bait"    : dp.clean(data.find("div", class_="bait_icon").get('title')),
-            "username": dp.clean(data.find("div", class_="gamername").text.strip()),
             "date"    : dp.serialize(data.find("div", class_="data").text),
         }
 
@@ -73,11 +73,11 @@ class RecordsParser(AbstractParser):
 class RatingsParser(AbstractParser):
     def _serialize_data(self, data, region: str, *args, **kwargs) -> dict:
         return {
-            "position": int(data.find("td", class_="position").text),
-            "username": data.find("div", class_="avatar_text").text,
-            "level"   : int(data.find("td", class_="level").text),
-            "gametime": int(data.find("td", class_="gametime").text),
             "region"  : region.lower(),
+            "player"  : data.find("div", class_="avatar_text").text,
+            "position": int(data.find("td", class_="position").text),
+            "level"   : int(data.find("td", class_="level").text),
+            "ingame"  : int(data.find("td", class_="gametime").text),
         }
 
     def _parse_data(self, data, region: str, *args, **kwargs) -> list[dict]:
@@ -92,12 +92,45 @@ class RatingsParser(AbstractParser):
         return ratings
 
 
-# WIP
 class WinnersParser(AbstractParser):
     def _serialize_data(self, data, region: str, *args, **kwargs) -> dict:
         return {
-
+            "category": kwargs.get("category", "records"),
+            "region"  : region,
+            "player"  : data.find("div", class_="avatar_text").text,
+            "position": int(data.find("td", class_="position").text),
+            "records" : int(data.find("td", class_="records").text),
+            "score"   : int(data.find("td", class_="score").text.replace(" ", "")),
+            "prize"   : data.find("td", class_="prize").text,
         }
 
     def _parse_data(self, data, region: str, *args, **kwargs) -> list[dict]:
-        pass
+        winners = []
+        soup    = BeautifulSoup(data, "html.parser")
+
+        for row in soup.find_all(attrs={"class": "highlight"}):
+            winners.append(
+                self._serialize_data(row, region)
+            )
+
+        return winners
+
+
+PARSERS = {
+    "records": (RecordsFetcher, RecordsParser),
+    "ratings": (RatingsFetcher, RatingsParser),
+    "winners": (WinnersFetcher, WinnersParser),
+}
+
+
+class ParsersManager:
+    @staticmethod
+    def create(name: str = "records") -> AbstractParser:
+        fetcher_name, parser_name = PARSERS.get(name, "records")
+
+        return parser_name(
+            fetcher = fetcher_name(
+                WebDriver(),
+                URLsManager()
+            )
+        )

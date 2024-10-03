@@ -7,6 +7,8 @@ class Winner(models.Model):
     score    = models.PositiveIntegerField(verbose_name="Score")
     player   = models.CharField(verbose_name="Username", max_length=256)
     prize    = models.CharField(verbose_name="Prize", max_length=256, blank=True)
+    region   = models.CharField(verbose_name="Record region", max_length=4)
+    category = models.CharField(verbose_name="Record category", max_length=16)
 
     class Meta:
         verbose_name = "Winner"
@@ -19,7 +21,9 @@ class Winner(models.Model):
             f"Player  : {self.player}\n"
             f"Records : {self.records}\n"
             f"Score   : {self.score}\n"
-            f"Prize   : {self.prize}"
+            f"Prize   : {self.prize}\n"
+            f"Region  : {self.region}\n"
+            f"Category: {self.category}"
         )
 
     @property
@@ -30,4 +34,6 @@ class Winner(models.Model):
             "records" : self.records,
             "score"   : self.score,
             "prize"   : self.prize,
+            "region"  : self.region,
+            "category": self.category
         }

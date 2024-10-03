@@ -16,7 +16,7 @@ class RatingsAPIView(generics.ListAPIView):
         The region parameter is retrieved from the URL kwargs (request query).
         If the region is not found in the list of valid regions, a 404 error is raised
         """
-        urls    = URLs()
+        urls    = URLsManager()
         region  = self.kwargs.get("region")
         ratings = Rating.objects.filter(
             region = region
