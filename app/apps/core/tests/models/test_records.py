@@ -15,7 +15,7 @@ class BaseRecordModelTestCase(TestCase):
             player   = "hurfy",
             date     = "2024-02-18",
             region   = "cis",
-            rec_type = "records"
+            category = "records"
         )
 
     def create_invalid_data(self) -> Record:
@@ -26,7 +26,8 @@ class BaseRecordModelTestCase(TestCase):
                 lure     = 34.1,
                 player   = [],
                 date     = {12, 24, 18},
-                region   = lambda x: int(x)
+                region   = lambda x: int(x),
+                category = {},
             )
 
     def setUp(self) -> None:
@@ -42,7 +43,7 @@ class BaseRecordModelTestCase(TestCase):
         self.assertEqual(self.data.player, 'hurfy')
         self.assertEqual(self.data.date, '2024-02-18')
         self.assertEqual(self.data.region, 'cis')
-        self.assertEqual(self.data.rec_type, 'records')
+        self.assertEqual(self.data.category, 'records')
 
     def test_create_invalid(self) -> None:
         with self.assertRaises(Exception):
@@ -57,7 +58,7 @@ class BaseRecordModelTestCase(TestCase):
             f"Player  : hurfy\n"
             f"Date    : 2024-02-18\n"
             f"Region  : cis\n"
-            f"Type    : records"
+            f"Category: records"
         )
 
         self.assertEqual(str(self.data), expected_data)
@@ -71,7 +72,7 @@ class BaseRecordModelTestCase(TestCase):
             "player"  : "hurfy",
             "date"    : "2024-02-18",
             "region"  : "cis",
-            "type"    : "records"
+            "category": "records"
         }
         self.assertEqual(self.data.as_dict, expected_data)
 

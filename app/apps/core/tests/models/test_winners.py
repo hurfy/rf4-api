@@ -12,6 +12,8 @@ class WinnerModelTestCase(TestCase):
             score    = 10000,
             player   = "hurfy",
             prize    = "",
+            region   = "cis",
+            category = "records",
         )
 
     @staticmethod
@@ -21,7 +23,9 @@ class WinnerModelTestCase(TestCase):
             records  = True,
             score    = 12.000,
             player   = ("hurfy",),
-            prize    = []
+            prize    = [],
+            region   = 123,
+            category = {},
         )
 
     def setUp(self) -> None:
@@ -46,7 +50,9 @@ class WinnerModelTestCase(TestCase):
             f"Player  : hurfy\n"
             f"Records : 3\n"
             f"Score   : 10000\n"
-            f"Prize   : "
+            f"Prize   : \n"
+            f"Region  : cis\n"
+            f"Category: records"
         )
 
         self.assertEqual(str(self.data), expected_data)
@@ -58,6 +64,8 @@ class WinnerModelTestCase(TestCase):
             "records" : 3,
             "score"   : 10000,
             "prize"   : "",
+            "region"  : "cis",
+            "category": "records",
         }
 
         self.assertEqual(self.data.as_dict, expected_data)
