@@ -1,0 +1,1 @@
+from apps.parser.tasks.task_data_process import process_data
