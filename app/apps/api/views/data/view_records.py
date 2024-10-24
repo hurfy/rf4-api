@@ -19,16 +19,16 @@ class RecordsAPIView(generics.ListAPIView):
         """
         urls     = URLsManager()
         region   = self.kwargs.get("region")
-        rec_type = self.kwargs.get("type")
+        category = self.kwargs.get("category")
         records  = Record.objects.filter(
             region   = region,
-            rec_type = rec_type
+            rec_type = category
         )
 
-        if region.upper() not in urls.regions or rec_type not in urls.categories:
+        if region.upper() not in urls.regions or category not in urls.categories:
             raise Http404(
                 f"No ratings found. Region: {region} - (GL, RU, DE, US, FR, CN, PL, KR, JP, EN) "
-                f"Record type: {rec_type} - (records, ultralight, telestick)"
+                f"Record type: {category} - (records, ultralight, telestick)"
             )
 
         return records

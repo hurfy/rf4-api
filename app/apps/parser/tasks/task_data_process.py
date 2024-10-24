@@ -2,7 +2,7 @@ from apps.parser.services import ParsersManager, DBProcessor
 from worker               import app
 
 
-@app.task()
+@app.task(autoretry_for=(Exception,), retry_kwargs={"max_retries": 7, "countdown": 5})
 def process_data(parser_name, model_name: str, *args, **kwargs) -> None:
     parser = ParsersManager.create(parser_name)
     data   = []

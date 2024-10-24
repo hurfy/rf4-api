@@ -1,2 +1,2 @@
-from apps.api.serializers.serializer_record import RecordSerializer
-from apps.api.serializers.serializer_rating import RatingSerializer
+from apps.api.serializers.parser import *
+from apps.api.serializers.data   import *
