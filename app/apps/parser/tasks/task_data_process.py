@@ -7,13 +7,8 @@ def process_data(parser_name, model_name: str, *args, **kwargs) -> None:
     parser = ParsersManager.create(parser_name)
     data   = []
 
-    # parse data
-    raw_data = parser.parse() \
-        if (weekly := kwargs.get("weekly", False)) \
-        else parser.parse(weekly)
-
-    # unpack data
-    for each in raw_data:
+    # parse and unpack data
+    for each in parser.parse(weekly=kwargs.get("weekly", False)):
         data.extend(each)
 
     # write data to db
@@ -24,6 +19,6 @@ def process_data(parser_name, model_name: str, *args, **kwargs) -> None:
 
 
 # process_data.delay("records", "AbsoluteRecord")
-# process_data.delay("records", "WeeklyRecord")
+# process_data.delay("records", "WeeklyRecord", weekly=True)
 # process_data.delay("ratings", "Rating")
 # process_data.delay("winners", "Winner")

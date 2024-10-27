@@ -96,7 +96,7 @@ class WinnersParser(AbstractParser):
     def _serialize_data(self, data, region: str, *args, **kwargs) -> dict:
         return {
             "category": kwargs.get("category", "records"),
-            "region"  : region,
+            "region"  : region.lower(),
             "player"  : data.find("div", class_="avatar_text").text,
             "position": int(data.find("td", class_="position").text),
             "records" : int(data.find("td", class_="records").text),
@@ -110,7 +110,11 @@ class WinnersParser(AbstractParser):
 
         for row in soup.find_all(attrs={"class": "highlight"}):
             winners.append(
-                self._serialize_data(row, region)
+                self._serialize_data(
+                    row,
+                    region,
+                    category = kwargs.get("category", "records")
+                )
             )
 
         return winners

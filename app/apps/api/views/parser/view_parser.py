@@ -24,11 +24,11 @@ class ParserAPIView(generics.GenericAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        def run_task(task_category, model_name: str) -> dict:
-            return {"id": process_data.delay(task_category, model_name).id, "status": "CREATED"}
+        def run_task(task_category, model_name: str, _weekly: bool = False) -> dict:
+            return {"id": process_data.delay(task_category, model_name, weekly=_weekly).id, "status": "CREATED"}
 
         category_tasks = {
-            "records": lambda: run_task("records", "WeeklyRecord" if weekly else "AbsoluteRecord"),
+            "records": lambda: run_task("records", "WeeklyRecord" if weekly else "AbsoluteRecord", _weekly=weekly),
             "ratings": lambda: run_task("ratings", "Rating"),
             "winners": lambda: run_task("winners", "Winner"),
             "all"    : lambda: [
