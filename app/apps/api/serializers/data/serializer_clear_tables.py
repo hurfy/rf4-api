@@ -1,13 +1,13 @@
 from rest_framework import serializers
 
 
-class ParserSerializer(serializers.Serializer):
-    categories = serializers.ListField(
-        child = serializers.CharField(max_length=24)
+class ClearTablesSerializer(serializers.Serializer):
+    tables = serializers.ListField(
+        child=serializers.CharField(max_length=24)
     )
 
-    def validate_categories(self, value: list[str]) -> list[str]:
-        error_text = ("Invalid value for 'categories' field. "
+    def validate_tables(self, value: list[str]) -> list[str]:
+        error_text = ("Invalid value for 'tables' field. "
                       "Allowed values are: 'abs_records', 'wk_records', 'ratings', 'winners', '*'.")
 
         if not value:

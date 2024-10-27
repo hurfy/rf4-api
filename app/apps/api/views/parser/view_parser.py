@@ -12,34 +12,33 @@ class ParserAPIView(generics.GenericAPIView):
     def post(self, request: Request, *args, **kwargs) -> Response:
         serializer = self.get_serializer(data=request.data)
 
+        # Validate data
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        category = serializer.validated_data.get("category")
-        weekly   = serializer.validated_data.get("weekly", False)
-
-        if category not in ("records", "ratings", "winners", "all"):
-            return Response(
-                {"error": f"Invalid category: {category}. Allowed values are [records, ratings, winners, all]."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        def run_task(task_category, model_name: str, _weekly: bool = False) -> dict:
-            return {"id": process_data.delay(task_category, model_name, weekly=_weekly).id, "status": "CREATED"}
-
-        category_tasks = {
-            "records": lambda: run_task("records", "WeeklyRecord" if weekly else "AbsoluteRecord", _weekly=weekly),
-            "ratings": lambda: run_task("ratings", "Rating"),
-            "winners": lambda: run_task("winners", "Winner"),
-            "all"    : lambda: [
-                run_task("records", "AbsoluteRecord"),
-                run_task("records", "WeeklyRecord"),
-                run_task("ratings", "Rating"),
-                run_task("winners", "Winner"),
-            ]
+        # Get and initialize data
+        categories = serializer.validated_data.get("categories")
+        values     = {
+            "abs_records": ("records", "AbsoluteRecord", False),
+            "wk_records" : ("records", "WeeklyRecord", True),
+            "ratings"    : ("ratings", "Rating", False),
+            "winners"    : ("winners", "Winner", False),
         }
+        tasks      = []
 
-        if category == "all":
-            return Response({"tasks": category_tasks[category]()}, status=status.HTTP_200_OK)
+        # Parse all tables
+        if "*" in categories:
+            for each in values.values():
+                task_category, model_name, weekly = each
+                tasks.append(
+                    {"id": process_data.delay(task_category, model_name, weekly=weekly).id, "status": "CREATED"}
+                )
 
-        return Response(category_tasks[category](), status=status.HTTP_200_OK)
+        else:
+            for each in categories:
+                task_category, model_name, weekly = values[each]
+                tasks.append(
+                    {"id": process_data.delay(task_category, model_name, weekly=weekly).id, "status": "CREATED"}
+                )
+
+        return Response({"tasks": tasks}, status=status.HTTP_200_OK)
