@@ -1,9 +1,11 @@
 from rest_framework.exceptions import ValidationError
-from rest_framework            import viewsets
+from rest_framework       import viewsets
+from django_filters       import rest_framework
 
-from apps.api.serializers      import RatingSerializer, URLParamsSerializer
-from apps.api.paginators       import DefaultAPIPaginator
-from apps.core.models          import Rating
+from apps.api.serializers import RatingSerializer, URLParamsSerializer
+from apps.api.paginators  import DefaultAPIPaginator
+from apps.core.models     import Rating
+from apps.core.filters    import RatingFilter
 
 
 class RatingViewSet(viewsets.ModelViewSet):
@@ -12,6 +14,8 @@ class RatingViewSet(viewsets.ModelViewSet):
     serializer_class = RatingSerializer
     ordering_fields  = "__all__"
     ordering         = ["position"]
+    filter_backends  = [rest_framework.DjangoFilterBackend]
+    filterset_class  = RatingFilter
     # TODO: permissions
 
     def get_queryset(self, *args, **kwargs) -> Rating:

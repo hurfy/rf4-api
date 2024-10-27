@@ -1,9 +1,10 @@
-from rest_framework.exceptions import ValidationError
-from rest_framework            import viewsets
+from rest_framework       import viewsets
+from django_filters       import rest_framework
 
-from apps.api.serializers      import WinnerSerializer, URLParamsSerializer
-from apps.api.paginators       import DefaultAPIPaginator
-from apps.core.models          import Winner
+from apps.api.serializers import WinnerSerializer, URLParamsSerializer
+from apps.api.paginators  import DefaultAPIPaginator
+from apps.core.models     import Winner
+from apps.core.filters    import WinnerFilter
 
 
 class WinnerViewSet(viewsets.ModelViewSet):
@@ -12,6 +13,8 @@ class WinnerViewSet(viewsets.ModelViewSet):
     serializer_class = WinnerSerializer
     ordering_fields  = "__all__"
     ordering         = ["position"]
+    filter_backends  = [rest_framework.DjangoFilterBackend]
+    filterset_class  = WinnerFilter
     # TODO: permissions
 
     def get_queryset(self, *args, **kwargs) -> Winner:
@@ -20,13 +23,10 @@ class WinnerViewSet(viewsets.ModelViewSet):
         category = self.kwargs.get("category")
 
         # Validate region
-        serializer = URLParamsSerializer(
+        URLParamsSerializer(
             data={
                 "region": region,
             }
-        )
-
-        if not serializer.is_valid():
-            raise ValidationError(serializer.errors)
+        ).is_valid()
 
         return self.queryset.filter(region=region, category=category)
