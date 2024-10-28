@@ -1,13 +1,21 @@
-from rest_framework.exceptions import ValidationError
-from rest_framework       import viewsets
-from django_filters       import rest_framework
+from drf_spectacular.utils import extend_schema_view, extend_schema
+from rest_framework        import viewsets
+from django_filters        import rest_framework
 
-from apps.api.serializers import RatingSerializer, URLParamsSerializer
-from apps.api.paginators  import DefaultAPIPaginator
-from apps.core.models     import Rating
-from apps.core.filters    import RatingFilter
+from apps.api.serializers  import RatingSerializer, URLParamsSerializer
+from apps.api.paginators   import DefaultAPIPaginator
+from apps.core.models      import Rating
+from apps.core.filters     import RatingFilter
 
 
+@extend_schema_view(
+    list=extend_schema(tags=["Ratings"]),
+    retrieve=extend_schema(tags=["Ratings"]),
+    create=extend_schema(tags=["Ratings"]),
+    update=extend_schema(tags=["Ratings"]),
+    partial_update=extend_schema(tags=["Ratings"]),
+    destroy=extend_schema(tags=["Ratings"]),
+)
 class RatingViewSet(viewsets.ModelViewSet):
     queryset         = Rating.objects.all()
     pagination_class = DefaultAPIPaginator
@@ -23,14 +31,11 @@ class RatingViewSet(viewsets.ModelViewSet):
         region = self.kwargs.get("region")
 
         # Validate region
-        serializer = URLParamsSerializer(
+        URLParamsSerializer(
             data = {
                 "region": region,
             }
-        )
-
-        if not serializer.is_valid():
-            raise ValidationError(serializer.errors)
+        ).is_valid()
 
         return self.queryset.filter(region = region)
 

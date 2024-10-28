@@ -1,11 +1,15 @@
 from rest_framework.response import Response
 from rest_framework.request  import Request
+from drf_spectacular.utils   import extend_schema
 from rest_framework          import status, generics
 
 from apps.api.serializers    import ClearTablesSerializer
 from apps.core.models        import AbsoluteRecord, WeeklyRecord, Rating, Winner
 
 
+@extend_schema(
+    tags=["DataProcessing"],
+)
 class ClearTablesAPIView(generics.GenericAPIView):
     serializer_class = ClearTablesSerializer
     # TODO: permissions

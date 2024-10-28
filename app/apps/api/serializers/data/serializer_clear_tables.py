@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 class ClearTablesSerializer(serializers.Serializer):
     tables = serializers.ListField(
-        child=serializers.CharField(max_length=24)
+        child = serializers.CharField(max_length=24)
     )
 
     def validate_tables(self, value: list[str]) -> list[str]:

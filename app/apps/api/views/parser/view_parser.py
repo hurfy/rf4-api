@@ -1,11 +1,15 @@
 from rest_framework.response import Response
 from rest_framework.request  import Request
+from drf_spectacular.utils   import extend_schema
 from rest_framework          import status, generics
 
 from apps.api.serializers    import ParserSerializer
 from apps.parser.tasks       import process_data
 
 
+@extend_schema(
+    tags=["DataProcessing"],
+)
 class ParserAPIView(generics.GenericAPIView):
     serializer_class = ParserSerializer
 

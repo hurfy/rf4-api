@@ -1,12 +1,21 @@
-from rest_framework       import viewsets
-from django_filters       import rest_framework
+from drf_spectacular.utils import extend_schema_view, extend_schema
+from rest_framework        import viewsets
+from django_filters        import rest_framework
 
-from apps.api.serializers import WinnerSerializer, URLParamsSerializer
-from apps.api.paginators  import DefaultAPIPaginator
-from apps.core.models     import Winner
-from apps.core.filters    import WinnerFilter
+from apps.api.serializers  import WinnerSerializer, URLParamsSerializer
+from apps.api.paginators   import DefaultAPIPaginator
+from apps.core.models      import Winner
+from apps.core.filters     import WinnerFilter
 
 
+@extend_schema_view(
+    list=extend_schema(tags=["Winners"]),
+    retrieve=extend_schema(tags=["Winners"]),
+    create=extend_schema(tags=["Winners"]),
+    update=extend_schema(tags=["Winners"]),
+    partial_update=extend_schema(tags=["Winners"]),
+    destroy=extend_schema(tags=["Winners"]),
+)
 class WinnerViewSet(viewsets.ModelViewSet):
     queryset         = Winner.objects.all()
     pagination_class = DefaultAPIPaginator

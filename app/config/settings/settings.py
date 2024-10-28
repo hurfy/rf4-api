@@ -4,12 +4,10 @@ from config.setup import DJANGO_KEY, PG_ADDRESS, PG_NAME, PG_PASSWORD, PG_PORT, 
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-
 # Django app
 SECRET_KEY    = DJANGO_KEY
 ALLOWED_HOSTS = []
 DEBUG         = True
-
 
 # Application definition
 INSTALLED_APPS = [
@@ -26,7 +24,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'django_filters',
-    'drf_yasg',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -59,7 +57,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
 # Database
 DATABASES = {
     "default": {
@@ -74,7 +71,6 @@ DATABASES = {
         },
     }
 }
-
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -92,13 +88,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 LANGUAGE_CODE = "en-us"
 TIME_ZONE     = "UTC"
 USE_I18N      = True
 USE_TZ        = True
-
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = "static/"
@@ -108,14 +102,30 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # REST Framework
 REST_FRAMEWORK = {
+    # Pagination
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 30,
-    'DEFAULT_FILTER_BACKENDS': [
+    'PAGE_SIZE'               : 30,
+    # Render
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+    # Filters
+    'DEFAULT_FILTER_BACKENDS' : [
             'django_filters.rest_framework.DjangoFilterBackend',
             'rest_framework.filters.OrderingFilter',
     ],
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',
+    # Open API
+    'DEFAULT_SCHEMA_CLASS'    : 'drf_spectacular.openapi.AutoSchema',
+}
+
+# OpenAPI
+SPECTACULAR_SETTINGS = {
+    'TITLE'               : 'Russian Fishing 4 - Community API',
+    'DESCRIPTION'         : 'Soon.TM',
+    'VERSION'             : '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SERVERS'             : [
+        {'url': 'https://api.rf4.com/v1'},
     ],
 }
 
