@@ -5,7 +5,7 @@ from os  import environ
 
 def main() -> None:
     # Run administrative tasks
-    environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.settings')
+    environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.settings")
 
     try:
         from django.core.management import execute_from_command_line
@@ -20,5 +20,5 @@ def main() -> None:
     execute_from_command_line(argv)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

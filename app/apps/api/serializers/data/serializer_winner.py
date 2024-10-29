@@ -1,6 +1,6 @@
-from rest_framework         import serializers
+from rest_framework   import serializers
 
-from apps.core.models       import Winner
+from apps.core.models import Winner
 
 
 class WinnerSerializer(serializers.ModelSerializer):

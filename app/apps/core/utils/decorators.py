@@ -1,11 +1,9 @@
-from time   import time
 from typing import Callable
+from time   import time
 
 
 def time_spent(func: Callable) -> Callable:
-    """
-    A decorator that calculates the execution time of a function
-    """
+    """A decorator that calculates the execution time of a function"""
     def wrapper(*args, **kwargs):
         start  = time()
         result = func(*args, **kwargs)

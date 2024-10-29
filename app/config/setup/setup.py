@@ -1,9 +1,8 @@
-from decouple import AutoConfig, config
+from decouple import config
 
 
 def get_variable(name: str) -> str:
-    # config = AutoConfig(search_path="../../../configs")
-    var    = config(name)
+    var = config(name)
 
     if var.startswith("<") or not var:
         raise Exception(f"Invalid or missing {var} in the .env file")
@@ -12,8 +11,7 @@ def get_variable(name: str) -> str:
 
 
 # Django
-DJANGO_KEY: str = get_variable("DJANGO_KEY")
-
+DJANGO_KEY  : str = get_variable("DJANGO_KEY")
 
 # Postgres
 PG_USERNAME : str  = get_variable("POSTGRES_USERNAME")

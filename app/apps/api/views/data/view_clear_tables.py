@@ -3,23 +3,23 @@ from rest_framework.request  import Request
 from drf_spectacular.utils   import extend_schema
 from rest_framework          import status, generics
 
-from apps.api.serializers    import ClearTablesSerializer
+from apps.api.serializers    import TablesListSerializer
 from apps.core.models        import AbsoluteRecord, WeeklyRecord, Rating, Winner
 
 
 @extend_schema(
-    tags=["DataProcessing"],
+    tags = ["DataProcessing"],
 )
 class ClearTablesAPIView(generics.GenericAPIView):
-    serializer_class = ClearTablesSerializer
+    serializer_class = TablesListSerializer
     # TODO: permissions
 
     def delete(self, request: Request, *args, **kwargs) -> Response:
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(data = request.data)
 
         # Validate data
         if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
         # Get and initialize data
         tables = serializer.validated_data.get("tables")
@@ -40,4 +40,4 @@ class ClearTablesAPIView(generics.GenericAPIView):
             for each in tables:
                 values[each].objects.all().delete()
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status = status.HTTP_204_NO_CONTENT)

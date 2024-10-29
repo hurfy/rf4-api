@@ -6,6 +6,7 @@ class DBProcessor:
     @staticmethod
     @transaction.atomic()
     def write(model_name: str, data: list[dict]) -> None:
+        """Updating the database with new data"""
         model = apps.get_model(f"core.{model_name}")
 
         model.objects.all().delete()

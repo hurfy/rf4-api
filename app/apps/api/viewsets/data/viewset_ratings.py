@@ -3,18 +3,18 @@ from rest_framework        import viewsets
 from django_filters        import rest_framework
 
 from apps.api.serializers  import RatingSerializer, URLParamsSerializer
-from apps.api.paginators   import DefaultAPIPaginator
+from apps.core.paginators  import DefaultAPIPaginator
 from apps.core.models      import Rating
 from apps.core.filters     import RatingFilter
 
 
 @extend_schema_view(
-    list=extend_schema(tags=["Ratings"]),
-    retrieve=extend_schema(tags=["Ratings"]),
-    create=extend_schema(tags=["Ratings"]),
-    update=extend_schema(tags=["Ratings"]),
-    partial_update=extend_schema(tags=["Ratings"]),
-    destroy=extend_schema(tags=["Ratings"]),
+    list           = extend_schema(tags = ["Ratings"]),
+    retrieve       = extend_schema(tags = ["Ratings"]),
+    create         = extend_schema(tags = ["Ratings"]),
+    update         = extend_schema(tags = ["Ratings"]),
+    partial_update = extend_schema(tags = ["Ratings"]),
+    destroy        = extend_schema(tags = ["Ratings"]),
 )
 class RatingViewSet(viewsets.ModelViewSet):
     queryset         = Rating.objects.all()
@@ -40,7 +40,6 @@ class RatingViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(region = region)
 
     def get_serializer_context(self) -> dict:
-        # Output the gametime in days or not?
         context = super().get_serializer_context()
         context.update(
             {

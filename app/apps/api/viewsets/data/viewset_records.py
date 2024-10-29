@@ -3,7 +3,7 @@ from rest_framework        import viewsets
 from django_filters        import rest_framework
 
 from apps.api.serializers  import AbsoluteRecordSerializer, WeeklyRecordSerializer, URLParamsSerializer
-from apps.api.paginators   import DefaultAPIPaginator
+from apps.core.paginators  import DefaultAPIPaginator
 from apps.core.models      import Record, AbsoluteRecord, WeeklyRecord
 from apps.core.filters     import AbsoluteRecordFilter, WeeklyRecordFilter
 
@@ -31,7 +31,6 @@ class BaseRecordViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(region = region, category = category)
 
     def get_serializer_context(self) -> dict:
-        # Output the weight in grams or not?
         context = super().get_serializer_context()
         context.update(
             {
@@ -43,12 +42,12 @@ class BaseRecordViewSet(viewsets.ModelViewSet):
 
 
 @extend_schema_view(
-    list=extend_schema(tags=["AbsoluteRecords"]),
-    retrieve=extend_schema(tags=["AbsoluteRecords"]),
-    create=extend_schema(tags=["AbsoluteRecords"]),
-    update=extend_schema(tags=["AbsoluteRecords"]),
-    partial_update=extend_schema(tags=["AbsoluteRecords"]),
-    destroy=extend_schema(tags=["AbsoluteRecords"]),
+    list           = extend_schema(tags = ["AbsoluteRecords"]),
+    retrieve       = extend_schema(tags = ["AbsoluteRecords"]),
+    create         = extend_schema(tags = ["AbsoluteRecords"]),
+    update         = extend_schema(tags = ["AbsoluteRecords"]),
+    partial_update = extend_schema(tags = ["AbsoluteRecords"]),
+    destroy        = extend_schema(tags = ["AbsoluteRecords"]),
 )
 class AbsoluteRecordsViewSet(BaseRecordViewSet):
     queryset         = AbsoluteRecord.objects.all()
@@ -57,12 +56,12 @@ class AbsoluteRecordsViewSet(BaseRecordViewSet):
 
 
 @extend_schema_view(
-    list=extend_schema(tags=["WeeklyRecords"]),
-    retrieve=extend_schema(tags=["WeeklyRecords"]),
-    create=extend_schema(tags=["WeeklyRecords"]),
-    update=extend_schema(tags=["WeeklyRecords"]),
-    partial_update=extend_schema(tags=["WeeklyRecords"]),
-    destroy=extend_schema(tags=["WeeklyRecords"]),
+    list           = extend_schema(tags = ["WeeklyRecords"]),
+    retrieve       = extend_schema(tags = ["WeeklyRecords"]),
+    create         = extend_schema(tags = ["WeeklyRecords"]),
+    update         = extend_schema(tags = ["WeeklyRecords"]),
+    partial_update = extend_schema(tags = ["WeeklyRecords"]),
+    destroy        = extend_schema(tags = ["WeeklyRecords"]),
 )
 class WeeklyRecordsViewSet(BaseRecordViewSet):
     queryset         = WeeklyRecord.objects.all()

@@ -1,2 +1,2 @@
-from apps.api.serializers.parser import *
-from apps.api.serializers.data   import *
+from apps.api.serializers.base import *
+from apps.api.serializers.data import *

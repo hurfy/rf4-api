@@ -9,9 +9,11 @@ class AbstractFetcher(ABC):
 
     @abstractmethod
     def _get_urls(self, *args, **kwargs) -> tuple[str, dict]:
+        """Generating a list of record table URLs"""
         pass
 
     def fetch(self, *args, **kwargs) -> tuple[str, str or None, str]:
+        """Fetching raw HTML for parsing"""
         class_name, urls = self._get_urls(*args, **kwargs)
 
         for key, value in urls.items():

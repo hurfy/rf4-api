@@ -27,6 +27,7 @@ class WebDriver:
         self._driver = webdriver.Chrome(options = options)
 
     def fetch_raw_html(self, url: str, class_name: str) -> str:
+        """Get a whole HTML page from which data will be extracted later on"""
         self._driver.get(url)
         self._driver.implicitly_wait(1)  # 1 second delay
 

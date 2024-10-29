@@ -1,14 +1,14 @@
-from django.db        import models
+from django.db import models
 
 
 class Winner(models.Model):
-    position = models.PositiveIntegerField(verbose_name="Rating position")
-    records  = models.PositiveIntegerField(verbose_name="Records count")
-    score    = models.PositiveIntegerField(verbose_name="Score")
-    player   = models.CharField(verbose_name="Username", max_length=256)
-    prize    = models.CharField(verbose_name="Prize", max_length=256, blank=True)
-    region   = models.CharField(verbose_name="Record region", max_length=4)
-    category = models.CharField(verbose_name="Record category", max_length=16)
+    position = models.PositiveIntegerField(verbose_name = "Rating position")
+    records  = models.PositiveIntegerField(verbose_name = "Records count")
+    score    = models.PositiveIntegerField(verbose_name = "Score")
+    player   = models.CharField(verbose_name = "Username", max_length = 256)
+    prize    = models.CharField(verbose_name = "Prize", max_length = 256, blank = True)
+    region   = models.CharField(verbose_name = "Record region", max_length = 4)
+    category = models.CharField(verbose_name = "Record category", max_length = 16)
 
     class Meta:
         verbose_name = "Winner"

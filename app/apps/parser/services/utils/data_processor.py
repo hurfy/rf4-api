@@ -13,6 +13,7 @@ class DataProcessor:
         )
 
     def serialize(self, text: str) -> str:
+        """Serialize date"""
         text    = self.clean(text)
         d, m, y = text.split(".")
 

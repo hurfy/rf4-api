@@ -1,1 +1,0 @@
-from apps.api.views.parser.view_parser import ParserAPIView

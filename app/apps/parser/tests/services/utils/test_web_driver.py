@@ -12,7 +12,7 @@ class WebDriverTestCase(TestCase):
         data = self.driver.fetch_raw_html("https://nohello.net/ru/", "container")
 
         self.assertIsInstance(data, str), self.assertTrue(data), self.assertIsNotNone(data)
-        self.assertIn('<div id="plsstop">', data)
+        self.assertIn("<div id=\"plsstop\">", data)
 
     def test_driver(self) -> None:
         data = self.driver.driver

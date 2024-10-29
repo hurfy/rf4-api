@@ -1,19 +1,18 @@
-from django.db      import models
+from django.db import models
 
 
 class Record(models.Model):
-    weight   = models.DecimalField(verbose_name="Fish weight", max_digits=16, decimal_places=3)
-    fish     = models.CharField(verbose_name="Fish name", max_length=64)
-    location = models.CharField(verbose_name="Location", max_length=64)
-    bait     = models.CharField(verbose_name="Bait name", max_length=128)
-    player   = models.CharField(verbose_name="Username", max_length=256)
-    date     = models.DateField(verbose_name="Date of catch")
-    region   = models.CharField(verbose_name="Record region", max_length=4)
-    category = models.CharField(verbose_name="Record type", max_length=16)
+    weight   = models.DecimalField(verbose_name = "Fish weight", max_digits = 16, decimal_places = 3)
+    fish     = models.CharField(verbose_name = "Fish name", max_length = 64)
+    location = models.CharField(verbose_name = "Location", max_length = 64)
+    bait     = models.CharField(verbose_name = "Bait name", max_length = 128)
+    player   = models.CharField(verbose_name = "Username", max_length = 256)
+    date     = models.DateField(verbose_name = "Date of catch")
+    region   = models.CharField(verbose_name = "Record region", max_length = 4)
+    category = models.CharField(verbose_name = "Record type", max_length = 16)
 
     class Meta:
         abstract = True
-        ordering = ["id"]
 
     def __str__(self) -> str:
         return (
@@ -49,9 +48,11 @@ class AbsoluteRecord(Record):
     class Meta:
         verbose_name = "Absolute Record"
         db_table     = "core_absolute_records"
+        ordering     = ["id"]
 
 
 class WeeklyRecord(Record):
     class Meta:
         verbose_name = "Weekly Record"
         db_table     = "core_weekly_records"
+        ordering     = ["id"]
