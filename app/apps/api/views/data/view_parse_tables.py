@@ -21,8 +21,8 @@ class ParserAPIView(generics.GenericAPIView):
             return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
         # Get and initialize data
-        categories = serializer.validated_data.get("categories")
-        values     = {
+        tables = serializer.validated_data.get("tables")
+        values = {
             "abs_records": ("records", "AbsoluteRecord", False),
             "wk_records" : ("records", "WeeklyRecord", True),
             "ratings"    : ("ratings", "Rating", False),
@@ -31,7 +31,7 @@ class ParserAPIView(generics.GenericAPIView):
         tasks      = []
 
         # Parse all tables
-        if "*" in categories:
+        if "*" in tables:
             for each in values.values():
                 task_category, model_name, weekly = each
                 tasks.append(
@@ -39,7 +39,7 @@ class ParserAPIView(generics.GenericAPIView):
                 )
 
         else:
-            for each in categories:
+            for each in tables:
                 task_category, model_name, weekly = values[each]
                 tasks.append(
                     {"id": process_data.delay(task_category, model_name, weekly = weekly).id, "status": "CREATED"}

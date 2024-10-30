@@ -2,24 +2,22 @@ from rest_framework import serializers
 
 
 class TablesListSerializer(serializers.Serializer):
-    allowed_values = ("abs_records", "wk_records", "ratings", "winners", "*")
-    tables         = serializers.ListField(
-        child = serializers.CharField(max_length = 24),
+    tables = serializers.ListField(
+        child       = serializers.CharField(max_length = 24),
+        allow_empty = False,
+        max_length  = 5,
     )
 
     def validate_tables(self, values: list[str]) -> list[str]:
-        error_text = (
+        allowed_values = ("abs_records", "wk_records", "ratings", "winners", "*")
+        error_text     = (
             "Invalid value: '{}'. "
-            f"Allowed values are: {self.allowed_values}."
+            f"Allowed values are: {allowed_values}."
         )
-
-        # Empty
-        if not values:
-            raise serializers.ValidationError("The table list is empty.")
 
         # Validation of each item in the list
         for each in values:
-            if each not in self.allowed_values:
+            if each not in allowed_values:
                 raise serializers.ValidationError(error_text.format(each))
 
         return values
